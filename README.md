@@ -1,9 +1,9 @@
 # deltae
 
-## Based on the whitepaper by Gaurav Sharma, Wencheng Wu and Endul N. Dala from University of Rochester, Rochester, NY
+Based on the whitepaper by Gaurav Sharma, Wencheng Wu and Endul N. Dala from University of Rochester, Rochester, NY
 
 ## Dependancies:
-Uses Pandas only for testing.
+Uses pandas only for testing.
 
 ## Background
 
@@ -17,19 +17,19 @@ It seems as though Rochester uses a different calculation for hPrime, h1Prime, h
 
 ## Example Usage:
 
-import deltae
+    import deltae
 
-## Takes Lab values as a dictionary - example below:
+##### Takes CIELAB values as a dictionary - example below:
 
     Lab1 = {'L': 50.00, 'a': 2.6772, 'b': -79.7751}
     Lab2 = {'L': 50.00, 'a': 0.00, 'b': -82.7485}
 
-## Get the DeltaE 1976 Formula of 2 Lab Values:
+##### Get the DeltaE 1976 Formula of 2 Lab Values:
     deltae.delta_e_1976(Lab1, Lab2)
 
-## Get the DeltaE 2000 Formula of 2 Lab Values:
+##### Get the DeltaE 2000 Formula of 2 Lab Values:
     deltae.delta_e_2000(Lab1, Lab2)
 
-## Test a Rochester Pair -
+##### Test a Rochester Pair -
 Type in the rochester data set pair that you want to see the values off.
     deltae.delta_e_2000_test_pair(33)
