@@ -1,17 +1,19 @@
 # deltae
 
-Based on the whitepaper by Gaurav Sharma, Wencheng Wu and Endul N. Dala from University of Rochester, Rochester, NY
+Written in Python.
+
+Currently has DeltaE1976, DeltaE2000 with the others looking to be implemented in the future.
+
+Based on the whitepaper by Gaurav Sharma, Wencheng Wu and Endul N. Dala from the University of Rochester NY
 
 ## Dependancies:
-Uses pandas only for testing.
+None. Uses pandas only for testing.
 
 ## Background
 
 Uses the data set provided from: http://www2.ece.rochester.edu/~gsharma/ciede2000/dataNprograms/CIEDE2000.xls to test against. (converted to csv as rochester_data.csv)
 
-Started out using Bruce Lindblooms (http://www.brucelindbloom.com/) DE2000 javascript file converting to python, then trying to get this to pass the rochester dataset which didn't work. 
-
-Upon reading the whitepaper I realised that there was probably some issues within Bruce's calculations, and started adjusting where necessary. 
+Based on using Bruce Lindblooms (http://www.brucelindbloom.com/) DE2000 calcuation. Then updated with the maths from the Rochester white paper.
 
 It seems as though Rochester uses a different calculation for hPrime, h1Prime, h2Prime and hBarPrime than Bruce. However the whole dataset does return the correct deltae2000 values for both formulas. Perhaps there are some combinations of lab values that would be different.
 
@@ -33,7 +35,7 @@ It seems as though Rochester uses a different calculation for hPrime, h1Prime, h
 ```python
     deltae.delta_e_2000(Lab1, Lab2)
 ```
-##### Test a Rochester Pair - takes a rochester data set pair that you want to see the values off.
+##### Test a Rochester Pair - takes a rochester data set pair that you want to see the values of.
 ```python
     deltae.delta_e_2000_test_pair(33)
 ```
