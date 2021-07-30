@@ -22,15 +22,15 @@ import deltae
 ## Takes Lab values as a dictionary
 ## Like the example below:
 
-Lab1 = {'L': 50.00, 'a': 2.6772, 'b': -79.7751}
-Lab2 = {'L': 50.00, 'a': 0.00, 'b': -82.7485}
+> Lab1 = {'L': 50.00, 'a': 2.6772, 'b': -79.7751}
+> Lab2 = {'L': 50.00, 'a': 0.00, 'b': -82.7485}
 
 ## Get the DeltaE 1976 Formula of 2 Lab Values:
-print("DeltaE1976", deltae.delta_e_1976(Lab1, Lab2))
+> deltae.delta_e_1976(Lab1, Lab2)
 
 ## Get the DeltaE 2000 Formula of 2 Lab Values:
-print("DeltaE2000", deltae.delta_e_2000(Lab1, Lab2))
+> deltae.delta_e_2000(Lab1, Lab2)
 
-## Test a Rochester Pair
-## Type in the rochester data set pair that you want to see the values off.
-deltae.delta_e_2000_test_pair(33)
+## Test a Rochester Pair -
+Type in the rochester data set pair that you want to see the values off.
+> deltae.delta_e_2000_test_pair(33)
