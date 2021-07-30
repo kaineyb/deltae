@@ -20,16 +20,20 @@ It seems as though Rochester uses a different calculation for hPrime, h1Prime, h
     import deltae
 
 ##### Takes CIELAB values as a dictionary - example below:
-
+```python
     Lab1 = {'L': 50.00, 'a': 2.6772, 'b': -79.7751}
     Lab2 = {'L': 50.00, 'a': 0.00, 'b': -82.7485}
+```
 
 ##### Get the DeltaE 1976 Formula of 2 Lab Values:
+```python
     deltae.delta_e_1976(Lab1, Lab2)
-
+```
 ##### Get the DeltaE 2000 Formula of 2 Lab Values:
+```python
     deltae.delta_e_2000(Lab1, Lab2)
-
+```
 ##### Test a Rochester Pair - takes a rochester data set pair that you want to see the values off.
-
+```python
     deltae.delta_e_2000_test_pair(33)
+```
