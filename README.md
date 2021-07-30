@@ -39,3 +39,8 @@ It seems as though Rochester uses a different calculation for hPrime, h1Prime, h
 ```python
     deltae.delta_e_2000_test_pair(33)
 ```
+
+##### Test against the rochester dataset
+```python
+    delta_e_2000_test()
+```
