@@ -16,9 +16,9 @@ Upon reading the whitepaper I realised that there was probably some issues withi
 It seems as though Rochester uses a different calculation for hPrime, h1Prime, h2Prime and hBarPrime than Bruce. However the whole dataset does return the correct deltae2000 values for both formulas. Perhaps there are some combinations of lab values that would be different.
 
 ## Example Usage:
-
+```python
     import deltae
-
+```
 ##### Takes CIELAB values as a dictionary - example below:
 ```python
     Lab1 = {'L': 50.00, 'a': 2.6772, 'b': -79.7751}
