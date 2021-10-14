@@ -11,7 +11,7 @@ keywords = ["color difference","colour difference", "delta e"]
 
 
 [tool.poetry.dependencies]
-python = "^3.4"
+python = "^3.6"
 
 
 [tool.poetry.dev-dependencies]

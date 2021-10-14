@@ -2,7 +2,7 @@
 
 Written in Python. 
 
-Requires 3.4 or greater (uses f-strings)
+Requires 3.6 or greater (uses f-strings)
 
 Currently has DeltaE1976, DeltaE2000 with the others looking to be implemented in the future.
 
