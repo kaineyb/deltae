@@ -1,3 +1,5 @@
+__version__ = '1.1.0'
+
 import math
 
 
@@ -16,7 +18,6 @@ def delta_e_1976(Lab1, Lab2):
     result = math.sqrt(delL * delL + dela * dela + delb * delb)
     return result
 
-
 def delta_e_2000(Lab1, Lab2, verbose=False, test=False, formula='Rochester'):
     """
     Takes Lab values as a dictionary and outputs a DeltaE2000 calculation
@@ -25,16 +26,17 @@ def delta_e_2000(Lab1, Lab2, verbose=False, test=False, formula='Rochester'):
     Lab1 = {'L': 50.00, 'a': 2.6772, 'b': -79.7751}
     Lab2 = {'L': 50.00, 'a': 0.00, 'b': -82.7485}
 
-    #verbose=True
+    # verbose=True
 
     Prints out all of the calculations that comes up with the deltaE2000.
 
-    #test=True
+    # test=True
 
     Returns all of the calculations that comes up with the deltaE2000 in the below order:
     a1Prime, a2Prime, c1Prime, c2Prime, h1Prime, h2Prime, hBarPrime, g, t, sL, sC, sH, rT, DE2000
+    Rounded to 4 decimal places, as that was what the test data set was rounded to. 
 
-    formula kwarg can be 'Rochester' or 'Bruce'. 
+    formula kwarg can be 'Rochester' or 'Bruce'.
 
     Rochester uses a different calculation for hPrime, h1Prime, h2Prime and hBarPrime than Bruce
     Read the white paper by Gaurav Sharma, Wencheng Wu and Endul N. Dala (http://www2.ece.rochester.edu/~gsharma/ciede2000/ciede2000noteCRNA.pdf)
@@ -175,121 +177,22 @@ def delta_e_2000(Lab1, Lab2, verbose=False, test=False, formula='Rochester'):
         print(f'DE2000: {round(DE2000, 4)}')
 
     if test == True:
+        a1Prime = round(a1Prime, 4)
+        a2Prime = round(a2Prime, 4)
+        c1Prime = round(c1Prime, 4)
+        c2Prime = round(c2Prime, 4)
+        h1Prime = round(h1Prime, 4)
+        h2Prime = round(h2Prime, 4)
+        hBarPrime = round(hBarPrime, 4)
+        g = round(g, 4)
+        t = round(t, 4)
+        sL = round(sL, 4)
+        sC = round(sC, 4)
+        sH = round(sH, 4)
+        rT = round(rT, 4)
+        DE2000 = round(DE2000, 4)
+
         return a1Prime, a2Prime, c1Prime, c2Prime, h1Prime, h2Prime, hBarPrime, g, t, sL, sC, sH, rT, DE2000
 
     else:
         return DE2000
-
-
-def delta_e_2000_test():
-    """
-    Tests the delta_e_2000() function against the Rochester dataset, using the Rochester formula.
-    Which is different to Bruce Lindbloom
-    """
-    import pandas as pd
-
-    CSV = 'rochester_data.csv'
-    Rds_df = pd.read_csv(CSV)
-
-    FAILURES = 0
-
-    print('-'*20)
-    print('Testing Dataset: ', CSV)
-    print('-'*20)
-
-    for index, row in Rds_df.iterrows():
-        rds_pair = row['Pair']
-        rds_Lab1 = {'L': row['L1'], 'a': row['A1'], 'b': row['B1']}
-        rds_Lab2 = {'L': row['L2'], 'a': row['A2'], 'b': row['B2']}
-        rds_a1Prime = row['a1Prime']
-        rds_a2Prime = row['a2Prime']
-        rds_c1Prime = row['c1Prime']
-        rds_c2Prime = row['c2Prime']
-        rds_h1Prime = row['h1Prime']
-        rds_h2Prime = row['h2Prime']
-        rds_hBarPrime = row['hBarPrime']
-        rds_g = row['G']
-        rds_t = row['T']
-        rds_sL = row['sL']
-        rds_sC = row['sC']
-        rds_sH = row['sH']
-        rds_rT = row['rT']
-        rds_de2000 = row['DE2000']
-
-        de2000_results = delta_e_2000(
-            rds_Lab1, rds_Lab2, test=True, formula='Rochester')
-
-        a1Prime, a2Prime, c1Prime, c2Prime, h1Prime, h2Prime, \
-            hBarPrime, g, t, sL, sC, sH, rT, de2000 = de2000_results
-
-        conditions = {
-            'a1Prime': (a1Prime, rds_a1Prime),
-            'a2Prime': (a2Prime, rds_a2Prime),
-            'c1Prime': (c1Prime, rds_c1Prime),
-            'c2Prime': (c2Prime, rds_c2Prime),
-            'h1Prime': (h1Prime, rds_h1Prime),
-            'h2Prime': (h2Prime, rds_h2Prime),
-            'hBarPrime': (hBarPrime, rds_hBarPrime),
-            'g': (g, rds_g),
-            't': (t, rds_t),
-            'sL': (sL, rds_sL),
-            'sC': (sC, rds_sC),
-            'sH': (sH, rds_sH),
-            'rT': (rT, rds_rT),
-            'de2000': (de2000, rds_de2000),
-        }
-
-        for key, value in conditions.items():
-            test = round(value[0], 4) == round(value[1], 4)
-            if not test:
-                FAILURES += 1
-                print('Pair', int(rds_pair), '| Failed |', key, '(Result:',
-                      round(value[0], 4), 'Dataset:', round(value[1], 4), ')')
-
-    if FAILURES == 0:
-
-        print('-'*20)
-        print('Test successful with :', FAILURES, 'errors.')
-        print('-'*20)
-
-    else:
-        print('-'*20)
-        print('Test failed with :', FAILURES, 'errors.')
-        print('-'*20)
-
-
-def delta_e_2000_test_pair(pair):
-    """
-    Analyse a specific pair in the Rochester Dataset.
-    Returns delta_e_2000(lab1, lab2, verbose=True)
-    """
-
-    import pandas as pd
-
-    CSV = 'rochester_data.csv'
-    Rds_df = pd.read_csv(CSV)
-
-    Rds_df = Rds_df.set_index('Pair')
-
-    def get_pair(pair_number):
-
-        l_1 = Rds_df.loc[pair_number, 'L1']
-        a_1 = Rds_df.loc[pair_number, 'A1']
-        b_1 = Rds_df.loc[pair_number, 'B1']
-        l_2 = Rds_df.loc[pair_number, 'L2']
-        a_2 = Rds_df.loc[pair_number, 'A2']
-        b_2 = Rds_df.loc[pair_number, 'B2']
-
-        rds_lab1 = {'L': l_1, 'a': a_1, 'b': b_1}
-        rds_lab2 = {'L': l_2, 'a': a_2, 'b': b_2}
-
-        return rds_lab1, rds_lab2
-
-    # change get_pair(x) to a pair you want to see the results of verbosley.
-    lab1, lab2 = get_pair(pair)
-
-    return delta_e_2000(lab1, lab2, verbose=True)
-
-
-if __name__ == '__main__':
-    delta_e_2000_test()

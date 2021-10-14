@@ -6,8 +6,11 @@ Currently has DeltaE1976, DeltaE2000 with the others looking to be implemented i
 
 Based on the whitepaper by Gaurav Sharma, Wencheng Wu and Endul N. Dala from the University of Rochester NY
 
-## Dependancies:
-None. Uses pandas only for testing.
+## User Dependancies:
+None
+
+## Dev Dependancies:
+Pandas for creating test_functions.py 
 
 ## Background
 
@@ -34,13 +37,4 @@ It seems as though Rochester uses a different calculation for hPrime, h1Prime, h
 ##### Get the DeltaE 2000 Formula of 2 Lab Values:
 ```python
     deltae.delta_e_2000(Lab1, Lab2)
-```
-##### Test a Rochester Pair - takes a rochester data set pair that you want to see the values of.
-```python
-    deltae.delta_e_2000_test_pair(33)
-```
-
-##### Test against the rochester dataset (Needs pandas installed)
-```python
-    delta_e_2000_test()
 ```
