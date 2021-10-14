@@ -5,9 +5,13 @@ description = "Deltae 2000 written in pure python. See README.md for more"
 authors = ["Kaine Bruce <kaineyb@gmail.com>"]
 license = "MIT"
 readme = "README.md"
+repository = "https://github.com/kaineyb/deltae"
+homepage = "https://github.com/kaineyb/deltae"
+keywords = ["color difference","colour difference", "delta e"]
+
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.4"
 
 
 [tool.poetry.dev-dependencies]
