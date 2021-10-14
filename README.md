@@ -28,7 +28,8 @@ It seems as though Rochester uses a different calculation for hPrime, h1Prime, h
 
 Pip: 
 
-```pip install deltae
+```console
+    pip install deltae
 ```
 
 
