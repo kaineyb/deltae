@@ -6,7 +6,7 @@ authors = ["Kaine Bruce <kaineyb@gmail.com>"]
 license = "MIT"
 readme = "README.md"
 repository = "https://github.com/kaineyb/deltae"
-homepage = "https://github.com/kaineyb/deltae"
+homepage = "https://pypi.org/project/deltae/"
 keywords = ["color difference","colour difference", "delta e"]
 
 
