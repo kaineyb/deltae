@@ -1,5 +1,7 @@
 # deltae
 
+[![Build Status](https://app.travis-ci.com/kaineyb/deltae.svg?branch=master)](https://app.travis-ci.com/kaineyb/deltae)
+
 Written in Python. 
 
 Requires 3.6 or greater (uses f-strings)
