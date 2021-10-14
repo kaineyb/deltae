@@ -1,6 +1,6 @@
 from deltae import __version__
 
-current_version = "1.1.1"
+current_version = "1.1.2"
 
 
 def test_version():
