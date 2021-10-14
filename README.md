@@ -24,6 +24,14 @@ Based on using Bruce Lindblooms (http://www.brucelindbloom.com/) DE2000 calcuati
 
 It seems as though Rochester uses a different calculation for hPrime, h1Prime, h2Prime and hBarPrime than Bruce. However the whole dataset does return the correct deltae2000 values for both formulas. Perhaps there are some combinations of lab values that would be different.
 
+## Installation
+
+Pip: 
+
+```pip install deltae
+```
+
+
 ## Example Usage:
 ```python
     import deltae
