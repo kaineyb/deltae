@@ -1,6 +1,6 @@
 # deltae
 
-[![Build Status](https://app.travis-ci.com/kaineyb/deltae.svg?branch=master)](https://app.travis-ci.com/kaineyb/deltae)
+[![CI](https://github.com/kaineyb/deltae/actions/workflows/ci.yml/badge.svg)](https://github.com/kaineyb/deltae/actions/workflows/ci.yml)
 
 Written in Python. 
 
@@ -50,4 +50,21 @@ Pip:
 ##### Get the DeltaE 2000 Formula of 2 Lab Values:
 ```python
     deltae.delta_e_2000(Lab1, Lab2)
+```
+
+## Development
+
+This project uses [uv](https://docs.astral.sh/uv/) for dependency management and packaging.
+
+```console
+    uv sync
+    uv run pytest
+```
+
+### Releasing
+
+```console
+    # bump version in pyproject.toml, then:
+    uv build
+    uv publish --token <PYPI_TOKEN>
 ```
