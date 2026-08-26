@@ -50,3 +50,11 @@ def test_delta_e_2000_rochester_dataset(case):
     }
 
     assert actual == case["expected"]
+
+
+def test_invalid_formula_raises():
+    Lab1 = {"L": 50.0, "a": 2.6772, "b": -79.7751}
+    Lab2 = {"L": 50.0, "a": 0.0, "b": -82.7485}
+
+    with pytest.raises(ValueError, match="formula"):
+        deltae.delta_e_2000(Lab1, Lab2, formula="bogus")
