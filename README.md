@@ -18,7 +18,7 @@ Pandas for creating test_functions.py
 
 ## Background
 
-Uses the data set provided from: http://www2.ece.rochester.edu/~gsharma/ciede2000/dataNprograms/CIEDE2000.xls to test against. (converted to csv as rochester_data.csv)
+Uses the data set provided from: https://hajim.rochester.edu/ece/sites/gsharma/ciede2000/dataNprograms/CIEDE2000.xls to test against. (converted to csv as rochester_data.csv)
 
 Based on using Bruce Lindblooms (http://www.brucelindbloom.com/) DE2000 calcuation. Then updated with the maths from the Rochester white paper.
 

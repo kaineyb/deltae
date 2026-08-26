@@ -42,7 +42,7 @@ def delta_e_2000(Lab1, Lab2, verbose=False, test=False, formula="Rochester"):
     formula kwarg can be 'Rochester' or 'Bruce'.
 
     Rochester uses a different calculation for hPrime, h1Prime, h2Prime and hBarPrime than Bruce
-    Read the white paper by Gaurav Sharma, Wencheng Wu and Endul N. Dala (http://www2.ece.rochester.edu/~gsharma/ciede2000/ciede2000noteCRNA.pdf)
+    Read the white paper by Gaurav Sharma, Wencheng Wu and Endul N. Dala (https://hajim.rochester.edu/ece/sites/gsharma/ciede2000/ciede2000noteCRNA.pdf)
     """
 
     kL = 1.0
