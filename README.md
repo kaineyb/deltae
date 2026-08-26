@@ -6,7 +6,7 @@ Written in Python.
 
 Requires Python 3.9 or greater
 
-Currently has DeltaE1976, DeltaE2000 with the others looking to be implemented in the future.
+Currently has DeltaE1976, DeltaE94, DeltaE2000 with the others looking to be implemented in the future.
 
 Based on the whitepaper by Gaurav Sharma, Wencheng Wu and Endul N. Dala from the University of Rochester NY
 
@@ -47,6 +47,13 @@ Pip:
 ```python
     deltae.delta_e_1976(Lab1, Lab2)
 ```
+##### Get the DeltaE 94 Formula of 2 Lab Values:
+```python
+    deltae.delta_e_94(Lab1, Lab2)
+```
+Lab1 is treated as the reference color and Lab2 as the sample - CIE94 is not
+symmetric. Pass `application='textiles'` to use the textiles constants instead
+of the default graphic arts ones.
 ##### Get the DeltaE 2000 Formula of 2 Lab Values:
 ```python
     deltae.delta_e_2000(Lab1, Lab2)
