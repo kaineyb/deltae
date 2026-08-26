@@ -13,7 +13,7 @@ Repository = "https://github.com/kaineyb/deltae"
 Homepage = "https://pypi.org/project/deltae/"
 
 [dependency-groups]
-dev = ["pytest>=9.1.1", "ruff>=0.6"]
+dev = ["pytest>=9.1.1", "ruff>=0.6", "hypothesis>=6"]
 data = ["pandas", "xlrd"]
 
 [tool.uv.build-backend]
