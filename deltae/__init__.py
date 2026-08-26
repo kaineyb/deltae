@@ -3,7 +3,8 @@ from importlib.metadata import version as _version
 __version__ = _version("deltae")
 
 import math
-from typing import Literal, NamedTuple, TypedDict
+from dataclasses import dataclass
+from typing import Literal, TypedDict
 
 
 class Lab(TypedDict):
@@ -12,7 +13,8 @@ class Lab(TypedDict):
     b: float
 
 
-class DeltaE2000Components(NamedTuple):
+@dataclass(frozen=True)
+class DeltaE2000Components:
     a1Prime: float
     a2Prime: float
     c1Prime: float
@@ -162,22 +164,9 @@ def _h_bar_prime_bruce(h1Prime: float, h2Prime: float) -> float:
 def _print_verbose(
     Lab1: Lab,
     Lab2: Lab,
-    a1Prime: float,
-    a2Prime: float,
     cBar: float,
     cBar7: float,
-    c1Prime: float,
-    c2Prime: float,
-    h1Prime: float,
-    h2Prime: float,
-    hBarPrime: float,
-    g: float,
-    t: float,
-    sL: float,
-    sC: float,
-    sH: float,
-    rT: float,
-    DE2000: float,
+    components: DeltaE2000Components,
 ) -> None:
     decoration = "-" * 20
 
@@ -189,66 +178,53 @@ def _print_verbose(
     print(decoration)
     print("Outputs")
     print(decoration)
-    print(f"a1Prime: {round(a1Prime, 4)}")
-    print(f"a2Prime: {round(a2Prime, 4)}")
+    print(f"a1Prime: {round(components.a1Prime, 4)}")
+    print(f"a2Prime: {round(components.a2Prime, 4)}")
     print(decoration)
     print(f"cBar: {round(cBar, 4)}")
     print(f"cBar7: {round(cBar7, 4)}")
     print(decoration)
-    print(f"c1Prime: {round(c1Prime, 4)}")
-    print(f"c2Prime: {round(c2Prime, 4)}")
+    print(f"c1Prime: {round(components.c1Prime, 4)}")
+    print(f"c2Prime: {round(components.c2Prime, 4)}")
     print(decoration)
-    print(f"h1Prime: {round(h1Prime, 4)}")
-    print(f"h2Prime: {round(h2Prime, 4)}")
+    print(f"h1Prime: {round(components.h1Prime, 4)}")
+    print(f"h2Prime: {round(components.h2Prime, 4)}")
     print(decoration)
-    print(f"(abs)h1Prime - h2Prime: {round(abs(h1Prime - h2Prime), 4)}")
+    print(
+        f"(abs)h1Prime - h2Prime: {round(abs(components.h1Prime - components.h2Prime), 4)}"
+    )
     print(decoration)
-    print(f"hBarPrime: {round(hBarPrime, 4)}")
-    print(f"g: {round(g, 4)}")
-    print(f"t: {round(t, 4)}")
-    print(f"sL: {round(sL, 4)}")
-    print(f"sC: {round(sC, 4)}")
-    print(f"sH: {round(sH, 4)}")
-    print(f"rT: {round(rT, 4)}")
+    print(f"hBarPrime: {round(components.hBarPrime, 4)}")
+    print(f"g: {round(components.g, 4)}")
+    print(f"t: {round(components.t, 4)}")
+    print(f"sL: {round(components.sL, 4)}")
+    print(f"sC: {round(components.sC, 4)}")
+    print(f"sH: {round(components.sH, 4)}")
+    print(f"rT: {round(components.rT, 4)}")
     print(decoration)
-    print(f"DE2000: {round(DE2000, 4)}")
+    print(f"DE2000: {round(components.DE2000, 4)}")
 
 
-def _round_test_output(
-    a1Prime: float,
-    a2Prime: float,
-    c1Prime: float,
-    c2Prime: float,
-    h1Prime: float,
-    h2Prime: float,
-    hBarPrime: float,
-    g: float,
-    t: float,
-    sL: float,
-    sC: float,
-    sH: float,
-    rT: float,
-    DE2000: float,
-) -> DeltaE2000Components:
+def _round_test_output(components: DeltaE2000Components) -> DeltaE2000Components:
     return DeltaE2000Components(
-        a1Prime=round(a1Prime, 4),
-        a2Prime=round(a2Prime, 4),
-        c1Prime=round(c1Prime, 4),
-        c2Prime=round(c2Prime, 4),
-        h1Prime=round(h1Prime, 4),
-        h2Prime=round(h2Prime, 4),
-        hBarPrime=round(hBarPrime, 4),
-        g=round(g, 4),
-        t=round(t, 4),
-        sL=round(sL, 4),
-        sC=round(sC, 4),
-        sH=round(sH, 4),
-        rT=round(rT, 4),
-        DE2000=round(DE2000, 4),
+        a1Prime=round(components.a1Prime, 4),
+        a2Prime=round(components.a2Prime, 4),
+        c1Prime=round(components.c1Prime, 4),
+        c2Prime=round(components.c2Prime, 4),
+        h1Prime=round(components.h1Prime, 4),
+        h2Prime=round(components.h2Prime, 4),
+        hBarPrime=round(components.hBarPrime, 4),
+        g=round(components.g, 4),
+        t=round(components.t, 4),
+        sL=round(components.sL, 4),
+        sC=round(components.sC, 4),
+        sH=round(components.sH, 4),
+        rT=round(components.rT, 4),
+        DE2000=round(components.DE2000, 4),
     )
 
 
-def delta_e_2000(
+def _delta_e_2000(
     Lab1: Lab,
     Lab2: Lab,
     verbose: bool = False,
@@ -256,21 +232,18 @@ def delta_e_2000(
     formula: Literal["Rochester", "Bruce"] = "Rochester",
 ) -> float | DeltaE2000Components:
     """
-    Takes Lab values as a dictionary and outputs a DeltaE2000 calculation
+    Full DE2000 implementation, not part of the public API - the public
+    delta_e_2000 always calls this with verbose/test at their defaults and
+    returns only the float.
 
-    Example Dictionarys:
-    Lab1 = {'L': 50.00, 'a': 2.6772, 'b': -79.7751}
-    Lab2 = {'L': 50.00, 'a': 0.00, 'b': -82.7485}
+    verbose=True prints every intermediate calculation, for manual
+    debugging.
 
-    # verbose=True
-
-    Prints out all of the calculations that comes up with the deltaE2000.
-
-    # test=True
-
-    Returns all of the calculations that comes up with the deltaE2000 in the below order:
-    a1Prime, a2Prime, c1Prime, c2Prime, h1Prime, h2Prime, hBarPrime, g, t, sL, sC, sH, rT, DE2000
-    Rounded to 4 decimal places, as that was what the test data set was rounded to.
+    test=True returns every intermediate value as a DeltaE2000Components
+    NamedTuple (a1Prime, a2Prime, c1Prime, c2Prime, h1Prime, h2Prime,
+    hBarPrime, g, t, sL, sC, sH, rT, DE2000), rounded to 4 decimal places
+    to match the reference dataset - used by the test suite to check
+    against the Rochester dataset pair-by-pair, not just the final DE2000.
 
     formula kwarg can be 'Rochester' or 'Bruce'.
 
@@ -356,44 +329,48 @@ def delta_e_2000(
         + (dCPrime / (kC * sC)) * (dHPrime / (kH * sH)) * rT
     )
 
+    components = DeltaE2000Components(
+        a1Prime=a1Prime,
+        a2Prime=a2Prime,
+        c1Prime=c1Prime,
+        c2Prime=c2Prime,
+        h1Prime=h1Prime,
+        h2Prime=h2Prime,
+        hBarPrime=hBarPrime,
+        g=g,
+        t=t,
+        sL=sL,
+        sC=sC,
+        sH=sH,
+        rT=rT,
+        DE2000=DE2000,
+    )
+
     if verbose:
-        _print_verbose(
-            Lab1,
-            Lab2,
-            a1Prime,
-            a2Prime,
-            cBar,
-            cBar7,
-            c1Prime,
-            c2Prime,
-            h1Prime,
-            h2Prime,
-            hBarPrime,
-            g,
-            t,
-            sL,
-            sC,
-            sH,
-            rT,
-            DE2000,
-        )
+        _print_verbose(Lab1, Lab2, cBar, cBar7, components)
 
     if test:
-        return _round_test_output(
-            a1Prime,
-            a2Prime,
-            c1Prime,
-            c2Prime,
-            h1Prime,
-            h2Prime,
-            hBarPrime,
-            g,
-            t,
-            sL,
-            sC,
-            sH,
-            rT,
-            DE2000,
-        )
+        return _round_test_output(components)
 
     return DE2000
+
+
+def delta_e_2000(
+    Lab1: Lab,
+    Lab2: Lab,
+    formula: Literal["Rochester", "Bruce"] = "Rochester",
+) -> float:
+    """
+    Takes Lab values as a dictionary and outputs a DeltaE2000 calculation
+
+    Example Dictionarys:
+    Lab1 = {'L': 50.00, 'a': 2.6772, 'b': -79.7751}
+    Lab2 = {'L': 50.00, 'a': 0.00, 'b': -82.7485}
+
+    formula kwarg can be 'Rochester' or 'Bruce'.
+
+    Rochester uses a different calculation for hPrime, h1Prime, h2Prime and hBarPrime than Bruce
+    Read the white paper by Gaurav Sharma, Wencheng Wu and Endul N. Dala (https://hajim.rochester.edu/ece/sites/gsharma/ciede2000/ciede2000noteCRNA.pdf)
+    """
+
+    return _delta_e_2000(Lab1, Lab2, formula=formula)
