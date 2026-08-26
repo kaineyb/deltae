@@ -21,6 +21,62 @@ def delta_e_1976(Lab1, Lab2):
     return result
 
 
+def delta_e_94(Lab1, Lab2, application="graphic_arts"):
+    """
+    Takes Lab values as a dictionary and outputs a DeltaE94 (CIE94) calculation
+
+    Example Dictionarys:
+    Lab1 = {'L': 50.00, 'a': 2.6772, 'b': -79.7751}
+    Lab2 = {'L': 50.00, 'a': 0.00, 'b': -82.7485}
+
+    Lab1 is treated as the reference color and Lab2 as the sample. Unlike
+    delta_e_1976 and delta_e_2000, CIE94 is not symmetric: sC and sH are
+    weighted by the reference's chroma (c1) rather than an average of both
+    colors, so delta_e_94(Lab1, Lab2) != delta_e_94(Lab2, Lab1) in general.
+
+    application kwarg can be 'graphic_arts' (default) or 'textiles', which
+    changes kL, K1 and K2 per the CIE94 spec.
+
+    Formula per Lindbloom (http://www.brucelindbloom.com/Eqn_DeltaE_CIE94.html)
+    """
+
+    if application == "graphic_arts":
+        kL = 1.0
+        K1 = 0.045
+        K2 = 0.015
+    elif application == "textiles":
+        kL = 2.0
+        K1 = 0.048
+        K2 = 0.014
+
+    kC = 1.0
+    kH = 1.0
+
+    dL = Lab1["L"] - Lab2["L"]
+    da = Lab1["a"] - Lab2["a"]
+    db = Lab1["b"] - Lab2["b"]
+
+    c1 = math.sqrt(Lab1["a"] * Lab1["a"] + Lab1["b"] * Lab1["b"])
+    c2 = math.sqrt(Lab2["a"] * Lab2["a"] + Lab2["b"] * Lab2["b"])
+    dC = c1 - c2
+
+    # dH^2 is always >= 0 mathematically; clamp to guard against floating
+    # point precision making it a tiny negative value.
+    dH = math.sqrt(max(0.0, da * da + db * db - dC * dC))
+
+    sL = 1.0
+    sC = 1.0 + K1 * c1
+    sH = 1.0 + K2 * c1
+
+    result = math.sqrt(
+        (dL / (kL * sL)) * (dL / (kL * sL))
+        + (dC / (kC * sC)) * (dC / (kC * sC))
+        + (dH / (kH * sH)) * (dH / (kH * sH))
+    )
+
+    return result
+
+
 def delta_e_2000(Lab1, Lab2, verbose=False, test=False, formula="Rochester"):
     """
     Takes Lab values as a dictionary and outputs a DeltaE2000 calculation
