@@ -1,3 +1,6 @@
+# Rochester CIEDE2000 source dataset (not ours to redistribute)
+/CIEDE2000.xls
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
