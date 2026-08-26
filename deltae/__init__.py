@@ -4,7 +4,7 @@ __version__ = _version("deltae")
 
 import math
 from dataclasses import dataclass
-from typing import Literal, TypedDict, overload
+from typing import Literal, TypedDict
 
 
 @dataclass(frozen=True)
@@ -17,8 +17,8 @@ class Lab:
 class LabDict(TypedDict):
     """Older dict-based Lab shape, e.g. {'L': 50.0, 'a': 2.6772, 'b': -79.7751}.
 
-    Still accepted everywhere Lab is - see the @overload pairs on each
-    public function. LabDict is a TypedDict (purely a static-typing
+    Still accepted everywhere Lab is (each public function takes
+    Lab | LabDict). LabDict is a TypedDict (purely a static-typing
     construct), so a plain, unannotated dict satisfies it at runtime too.
     """
 
@@ -51,10 +51,6 @@ class DeltaE2000Components:
     DE2000: float
 
 
-@overload
-def delta_e_1976(Lab1: Lab, Lab2: Lab) -> float: ...
-@overload
-def delta_e_1976(Lab1: LabDict, Lab2: LabDict) -> float: ...
 def delta_e_1976(Lab1: Lab | LabDict, Lab2: Lab | LabDict) -> float:
     """
     Takes Lab values and outputs a DeltaE1976 calculation
@@ -73,16 +69,6 @@ def delta_e_1976(Lab1: Lab | LabDict, Lab2: Lab | LabDict) -> float:
     return result
 
 
-@overload
-def delta_e_94(
-    Lab1: Lab, Lab2: Lab, application: Literal["graphic_arts", "textiles"] = ...
-) -> float: ...
-@overload
-def delta_e_94(
-    Lab1: LabDict,
-    Lab2: LabDict,
-    application: Literal["graphic_arts", "textiles"] = ...,
-) -> float: ...
 def delta_e_94(
     Lab1: Lab | LabDict,
     Lab2: Lab | LabDict,
@@ -396,14 +382,6 @@ def _delta_e_2000(
     return DE2000
 
 
-@overload
-def delta_e_2000(
-    Lab1: Lab, Lab2: Lab, formula: Literal["Rochester", "Bruce"] = ...
-) -> float: ...
-@overload
-def delta_e_2000(
-    Lab1: LabDict, Lab2: LabDict, formula: Literal["Rochester", "Bruce"] = ...
-) -> float: ...
 def delta_e_2000(
     Lab1: Lab | LabDict,
     Lab2: Lab | LabDict,
