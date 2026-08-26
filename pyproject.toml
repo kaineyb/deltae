@@ -5,7 +5,7 @@ description = "Deltae 2000 written in pure python. See README.md for more"
 authors = [{ name = "Kaine Bruce", email = "kaineyb@gmail.com" }]
 license = "MIT"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 keywords = ["color difference", "colour difference", "delta e"]
 
 [project.urls]
@@ -13,7 +13,7 @@ Repository = "https://github.com/kaineyb/deltae"
 Homepage = "https://pypi.org/project/deltae/"
 
 [dependency-groups]
-dev = ["pytest==8.1.1", "ruff>=0.6"]
+dev = ["pytest>=9.1.1", "ruff>=0.6"]
 
 [tool.uv.build-backend]
 module-root = ""
@@ -24,5 +24,5 @@ build-backend = "uv_build"
 
 [tool.ruff]
 line-length = 88
-target-version = "py39"
+target-version = "py310"
 extend-exclude = ["README.md"]
