@@ -4,13 +4,33 @@ __version__ = _version("deltae")
 
 import math
 from dataclasses import dataclass
-from typing import Literal, TypedDict
+from typing import Literal, TypedDict, overload
 
 
-class Lab(TypedDict):
+@dataclass(frozen=True)
+class Lab:
     L: float
     a: float
     b: float
+
+
+class LabDict(TypedDict):
+    """Older dict-based Lab shape, e.g. {'L': 50.0, 'a': 2.6772, 'b': -79.7751}.
+
+    Still accepted everywhere Lab is - see the @overload pairs on each
+    public function. LabDict is a TypedDict (purely a static-typing
+    construct), so a plain, unannotated dict satisfies it at runtime too.
+    """
+
+    L: float
+    a: float
+    b: float
+
+
+def _as_lab(value: Lab | LabDict) -> Lab:
+    if isinstance(value, Lab):
+        return value
+    return Lab(L=value["L"], a=value["a"], b=value["b"])
 
 
 @dataclass(frozen=True)
@@ -31,32 +51,48 @@ class DeltaE2000Components:
     DE2000: float
 
 
-def delta_e_1976(Lab1: Lab, Lab2: Lab) -> float:
+@overload
+def delta_e_1976(Lab1: Lab, Lab2: Lab) -> float: ...
+@overload
+def delta_e_1976(Lab1: LabDict, Lab2: LabDict) -> float: ...
+def delta_e_1976(Lab1: Lab | LabDict, Lab2: Lab | LabDict) -> float:
     """
-    Takes Lab values as a dictionary and outputs a DeltaE1976 calculation
+    Takes Lab values and outputs a DeltaE1976 calculation
 
-    Example Dictionarys:
-    Lab1 = {'L': 50.00, 'a': 2.6772, 'b': -79.7751}
+    Lab1/Lab2 can each be a deltae.Lab instance or a plain dict/LabDict:
+    Lab1 = deltae.Lab(L=50.00, a=2.6772, b=-79.7751)
     Lab2 = {'L': 50.00, 'a': 0.00, 'b': -82.7485}
     """
+    Lab1 = _as_lab(Lab1)
+    Lab2 = _as_lab(Lab2)
 
-    delL = Lab1["L"] - Lab2["L"]
-    dela = Lab1["a"] - Lab2["a"]
-    delb = Lab1["b"] - Lab2["b"]
+    delL = Lab1.L - Lab2.L
+    dela = Lab1.a - Lab2.a
+    delb = Lab1.b - Lab2.b
     result = math.sqrt(delL * delL + dela * dela + delb * delb)
     return result
 
 
+@overload
 def delta_e_94(
-    Lab1: Lab,
-    Lab2: Lab,
+    Lab1: Lab, Lab2: Lab, application: Literal["graphic_arts", "textiles"] = ...
+) -> float: ...
+@overload
+def delta_e_94(
+    Lab1: LabDict,
+    Lab2: LabDict,
+    application: Literal["graphic_arts", "textiles"] = ...,
+) -> float: ...
+def delta_e_94(
+    Lab1: Lab | LabDict,
+    Lab2: Lab | LabDict,
     application: Literal["graphic_arts", "textiles"] = "graphic_arts",
 ) -> float:
     """
-    Takes Lab values as a dictionary and outputs a DeltaE94 (CIE94) calculation
+    Takes Lab values and outputs a DeltaE94 (CIE94) calculation
 
-    Example Dictionarys:
-    Lab1 = {'L': 50.00, 'a': 2.6772, 'b': -79.7751}
+    Lab1/Lab2 can each be a deltae.Lab instance or a plain dict/LabDict:
+    Lab1 = deltae.Lab(L=50.00, a=2.6772, b=-79.7751)
     Lab2 = {'L': 50.00, 'a': 0.00, 'b': -82.7485}
 
     Lab1 is treated as the reference color and Lab2 as the sample. Unlike
@@ -69,6 +105,8 @@ def delta_e_94(
 
     Formula per Lindbloom (http://www.brucelindbloom.com/Eqn_DeltaE_CIE94.html)
     """
+    Lab1 = _as_lab(Lab1)
+    Lab2 = _as_lab(Lab2)
 
     if application == "graphic_arts":
         kL = 1.0
@@ -86,12 +124,12 @@ def delta_e_94(
     kC = 1.0
     kH = 1.0
 
-    dL = Lab1["L"] - Lab2["L"]
-    da = Lab1["a"] - Lab2["a"]
-    db = Lab1["b"] - Lab2["b"]
+    dL = Lab1.L - Lab2.L
+    da = Lab1.a - Lab2.a
+    db = Lab1.b - Lab2.b
 
-    c1 = math.sqrt(Lab1["a"] * Lab1["a"] + Lab1["b"] * Lab1["b"])
-    c2 = math.sqrt(Lab2["a"] * Lab2["a"] + Lab2["b"] * Lab2["b"])
+    c1 = math.sqrt(Lab1.a * Lab1.a + Lab1.b * Lab1.b)
+    c2 = math.sqrt(Lab2.a * Lab2.a + Lab2.b * Lab2.b)
     dC = c1 - c2
 
     # dH^2 is always >= 0 mathematically; clamp to guard against floating
@@ -173,8 +211,8 @@ def _print_verbose(
     print(decoration)
     print("LAB Value Input")
     print(decoration)
-    print(f"LAB1: {Lab1['L']}, {Lab1['a']}, {Lab1['b']}")
-    print(f"LAB2: {Lab2['L']}, {Lab2['a']}, {Lab2['b']}")
+    print(f"LAB1: {Lab1.L}, {Lab1.a}, {Lab1.b}")
+    print(f"LAB2: {Lab2.L}, {Lab2.a}, {Lab2.b}")
     print(decoration)
     print("Outputs")
     print(decoration)
@@ -225,8 +263,8 @@ def _round_test_output(components: DeltaE2000Components) -> DeltaE2000Components
 
 
 def _delta_e_2000(
-    Lab1: Lab,
-    Lab2: Lab,
+    Lab1: Lab | LabDict,
+    Lab2: Lab | LabDict,
     verbose: bool = False,
     test: bool = False,
     formula: Literal["Rochester", "Bruce"] = "Rochester",
@@ -240,7 +278,7 @@ def _delta_e_2000(
     debugging.
 
     test=True returns every intermediate value as a DeltaE2000Components
-    NamedTuple (a1Prime, a2Prime, c1Prime, c2Prime, h1Prime, h2Prime,
+    dataclass (a1Prime, a2Prime, c1Prime, c2Prime, h1Prime, h2Prime,
     hBarPrime, g, t, sL, sC, sH, rT, DE2000), rounded to 4 decimal places
     to match the reference dataset - used by the test suite to check
     against the Rochester dataset pair-by-pair, not just the final DE2000.
@@ -251,31 +289,34 @@ def _delta_e_2000(
     Read the white paper by Gaurav Sharma, Wencheng Wu and Endul N. Dala (https://hajim.rochester.edu/ece/sites/gsharma/ciede2000/ciede2000noteCRNA.pdf)
     """
 
+    Lab1 = _as_lab(Lab1)
+    Lab2 = _as_lab(Lab2)
+
     kL = 1.0
     kC = 1.0
     kH = 1.0
-    lBarPrime = 0.5 * (Lab1["L"] + Lab2["L"])
-    c1 = math.sqrt(Lab1["a"] * Lab1["a"] + Lab1["b"] * Lab1["b"])
-    c2 = math.sqrt(Lab2["a"] * Lab2["a"] + Lab2["b"] * Lab2["b"])
+    lBarPrime = 0.5 * (Lab1.L + Lab2.L)
+    c1 = math.sqrt(Lab1.a * Lab1.a + Lab1.b * Lab1.b)
+    c2 = math.sqrt(Lab2.a * Lab2.a + Lab2.b * Lab2.b)
     cBar = 0.5 * (c1 + c2)
     cBar7 = cBar**7
     g = 0.5 * (1.0 - math.sqrt(cBar7 / (cBar7 + 25**7)))  # 25**7 or 6103515625
 
-    a1Prime = Lab1["a"] * (1.0 + g)
-    a2Prime = Lab2["a"] * (1.0 + g)
+    a1Prime = Lab1.a * (1.0 + g)
+    a2Prime = Lab2.a * (1.0 + g)
 
-    c1Prime = math.sqrt(a1Prime * a1Prime + Lab1["b"] * Lab1["b"])
-    c2Prime = math.sqrt(a2Prime * a2Prime + Lab2["b"] * Lab2["b"])
+    c1Prime = math.sqrt(a1Prime * a1Prime + Lab1.b * Lab1.b)
+    c2Prime = math.sqrt(a2Prime * a2Prime + Lab2.b * Lab2.b)
 
     cBarPrime = 0.5 * (c1Prime + c2Prime)
 
     if formula == "Rochester":
-        h1Prime = _h_prime_rochester(Lab1["b"], a1Prime)
-        h2Prime = _h_prime_rochester(Lab2["b"], a2Prime)
+        h1Prime = _h_prime_rochester(Lab1.b, a1Prime)
+        h2Prime = _h_prime_rochester(Lab2.b, a2Prime)
         hBarPrime = _h_bar_prime_rochester(h1Prime, h2Prime, c1Prime, c2Prime)
     elif formula == "Bruce":
-        h1Prime = _h_prime_bruce(Lab1["b"], a1Prime)
-        h2Prime = _h_prime_bruce(Lab2["b"], a2Prime)
+        h1Prime = _h_prime_bruce(Lab1.b, a1Prime)
+        h2Prime = _h_prime_bruce(Lab2.b, a2Prime)
         hBarPrime = _h_bar_prime_bruce(h1Prime, h2Prime)
     else:
         raise ValueError(f"formula must be 'Rochester' or 'Bruce', got {formula!r}")
@@ -298,7 +339,7 @@ def _delta_e_2000(
             else h2Prime - h1Prime - 360.0
         )
 
-    dLPrime = Lab2["L"] - Lab1["L"]
+    dLPrime = Lab2.L - Lab1.L
     dCPrime = c2Prime - c1Prime
     dHPrime = (
         2.0
@@ -355,16 +396,24 @@ def _delta_e_2000(
     return DE2000
 
 
+@overload
 def delta_e_2000(
-    Lab1: Lab,
-    Lab2: Lab,
+    Lab1: Lab, Lab2: Lab, formula: Literal["Rochester", "Bruce"] = ...
+) -> float: ...
+@overload
+def delta_e_2000(
+    Lab1: LabDict, Lab2: LabDict, formula: Literal["Rochester", "Bruce"] = ...
+) -> float: ...
+def delta_e_2000(
+    Lab1: Lab | LabDict,
+    Lab2: Lab | LabDict,
     formula: Literal["Rochester", "Bruce"] = "Rochester",
 ) -> float:
     """
-    Takes Lab values as a dictionary and outputs a DeltaE2000 calculation
+    Takes Lab values and outputs a DeltaE2000 calculation
 
-    Example Dictionarys:
-    Lab1 = {'L': 50.00, 'a': 2.6772, 'b': -79.7751}
+    Lab1/Lab2 can each be a deltae.Lab instance or a plain dict/LabDict:
+    Lab1 = deltae.Lab(L=50.00, a=2.6772, b=-79.7751)
     Lab2 = {'L': 50.00, 'a': 0.00, 'b': -82.7485}
 
     formula kwarg can be 'Rochester' or 'Bruce'.

@@ -37,9 +37,9 @@ Pip:
 ```python
     import deltae
 ```
-##### Takes CIELAB values as a dictionary - example below:
+##### Takes CIELAB values as a deltae.Lab or a plain dict - example below:
 ```python
-    Lab1 = {'L': 50.00, 'a': 2.6772, 'b': -79.7751}
+    Lab1 = deltae.Lab(L=50.00, a=2.6772, b=-79.7751)
     Lab2 = {'L': 50.00, 'a': 0.00, 'b': -82.7485}
 ```
 
