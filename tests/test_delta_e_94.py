@@ -31,6 +31,11 @@ def test_reference_and_sample_are_not_interchangeable():
     assert deltae.delta_e_94(LAB1, LAB2) != deltae.delta_e_94(LAB2, LAB1)
 
 
+def test_invalid_application_raises():
+    with pytest.raises(ValueError, match="application"):
+        deltae.delta_e_94(LAB1, LAB2, application="bogus")
+
+
 def test_asymmetry_can_be_large():
     """A pair with a large chroma gap makes the asymmetry obvious: treating
     the saturated color as reference weights sC/sH much more heavily than
