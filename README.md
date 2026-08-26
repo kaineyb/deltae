@@ -14,11 +14,11 @@ Based on the whitepaper by Gaurav Sharma, Wencheng Wu and Endul N. Dala from the
 None
 
 ## Dev Dependancies:
-Pandas for creating test_functions.py 
+Pandas and xlrd for rebuilding the test dataset from CIEDE2000.xls (see tests/build_rochester_data.py)
 
 ## Background
 
-Uses the data set provided from: https://hajim.rochester.edu/ece/sites/gsharma/ciede2000/dataNprograms/CIEDE2000.xls to test against. (converted to csv as rochester_data.csv)
+Uses the data set provided from: https://hajim.rochester.edu/ece/sites/gsharma/ciede2000/dataNprograms/CIEDE2000.xls to test against. (converted to JSON as tests/data/rochester_data.json - see tests/build_rochester_data.py)
 
 Based on using Bruce Lindblooms (http://www.brucelindbloom.com/) DE2000 calcuation. Then updated with the maths from the Rochester white paper.
 
