@@ -1,4 +1,6 @@
-__version__ = '1.1.2'
+from importlib.metadata import version as _version
+
+__version__ = _version("deltae")
 
 import math
 
